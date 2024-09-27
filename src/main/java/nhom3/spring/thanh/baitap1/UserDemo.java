@@ -19,7 +19,7 @@ public class UserDemo {
     private String firstName;
 
     @Column
-    private String lastName;
+    private String email;
 
     // Getters và Setters
     public int getId() {
@@ -38,12 +38,12 @@ public class UserDemo {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
 

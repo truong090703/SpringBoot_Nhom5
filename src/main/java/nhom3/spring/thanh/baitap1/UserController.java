@@ -5,7 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -14,13 +16,13 @@ public class UserController {
     UserService userService;
 
     // Hiển thị trang home với danh sách tất cả user
-    @GetMapping("/home")
-    public String home(Model model) {
-        // Lấy tất cả user từ database
-        Iterable<UserDemo> users = userService.getAllUsers();
-        model.addAttribute("users", users);
-        return "home";  // Trả về trang home.html
-    }
+//    @GetMapping("/home")
+//    public String home(Model model) {
+//        // Lấy tất cả user từ database
+//        Iterable<UserDemo> users = userService.getAllUsers();
+//        model.addAttribute("users", users);
+//        return "home";  // Trả về trang home.html
+//    }
 
     // Hiển thị form để thêm mới user
     @GetMapping("/addUser")
@@ -33,8 +35,53 @@ public class UserController {
     @PostMapping("/saveUser")
     public String saveUser(@ModelAttribute("user") UserDemo user) {
         userService.saveOrUpdate(user);  // Lưu user xuống database
-        return "redirect:/home";  // Chuyển hướng về trang home
+        return "redirect:/list-users";  // Chuyển hướng về trang home
     }
+    @GetMapping("/user/{id}")
+    public String getUserById(@PathVariable("id") int id, Model model) {
+        UserDemo user = userService.findById(id);
+        if (user != null) {
+            model.addAttribute("user", user);
+            return "userDetail"; // Trả về trang userDetail.html
+        } else {
+            return "userNotFound"; // Trả về trang lỗi nếu không tìm thấy user
+        }
+    }
+    @GetMapping("/list-users")
+    public String listUsers(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "userList"; // Trả về trang userList.html
+    }
+
+    // Hiển thị form chỉnh sửa người dùng
+    @GetMapping("/edit-user/{id}")
+    public String editUser(@PathVariable("id") int id, Model model) {
+        UserDemo user = userService.findById(id);
+        if (user != null) {
+            model.addAttribute("user", user);
+            return "editUser"; // Trả về trang editUser.html
+        } else {
+            return "redirect:/list-users"; // Nếu không tìm thấy user, redirect về danh sách
+        }
+    }
+
+    // Xử lý lưu thông tin user sau khi chỉnh sửa
+    @PostMapping("/update-user")
+    public String updateUser(@ModelAttribute("user") UserDemo user) {
+        userService.saveOrUpdate(user);
+        return "redirect:/list-users"; // Sau khi update, chuyển về danh sách người dùng
+    }
+    // Xóa user theo ID
+    @GetMapping("/delete-user/{id}")
+    public String deleteUser(@PathVariable("id") int id) {
+        userService.deleteUser(id);
+        return "redirect:/list-users"; // Redirect về trang danh sách user sau khi xóa
+    }
+//    @GetMapping("/deleteUser/{id}")
+//    public String deleteUser(@PathVariable("id") int id) {
+//        userService.deleteUser(id);
+//        return "redirect:/home"; // Chuyển hướng về trang chính sau khi xóa
+//    }
 }
 
 //
@@ -65,6 +112,6 @@ public class UserController {
 //    public String submitForm(@ModelAttribute("sv") UserDemo sv, Model model) {
 //        // Xử lý thông tin sinh viên sau khi form được submit
 //        model.addAttribute("message", "Thông tin sinh viên: " + sv.getHoTen() + ", CCCD: " + sv.getCccd());
-//        return "svResult"; // Trả về file svResult.html để hiển thị kết quả
+//        return "svResult"; // Trả về file userNotFound.html để hiển thị kết quả
 //    }
 //}

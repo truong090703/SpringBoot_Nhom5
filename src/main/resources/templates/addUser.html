@@ -9,11 +9,11 @@
 <!-- Form thêm người dùng mới -->
 <form action="#" th:action="@{/saveUser}" th:object="${user}" method="post">
     <!-- Không cần input cho ID, ID sẽ được tạo tự động -->
-    <label for="firstName">First Name:</label>
+    <label for="firstName">Username:</label>
     <input type="text" id="firstName" th:field="*{firstName}" /><br/>
 
-    <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" th:field="*{lastName}" /><br/>
+    <label for="lastName">Email:</label>
+    <input type="text" id="lastName" th:field="*{email}" /><br/>
 
     <button type="submit">Lưu</button>
 </form>
